@@ -64,13 +64,25 @@ class User {
       .catch((err) => console.log(err));
   }
 
+  deleteItemFromCart(productId) {
+    const db = getDb();
+    const updatedCartItems = this.cart.items.filter(
+      (item) => item.productId.toString() !== productId.toString()
+    );
+    return db
+      .collection("users")
+      .updateOne(
+        { _id: this._id },
+        { $set: { cart: { items: updatedCartItems } } }
+      );
+  }
+
   static findById(userId) {
     const db = getDb();
     return db
       .collection("users")
       .findOne({ _id: new mongodb.ObjectId(userId) })
       .then((user) => {
-        console.log(user);
         return user;
       })
       .catch((err) => {

@@ -12,7 +12,7 @@ class Product {
   }
 
   save() {
-    const db = getDb(); 
+    const db = getDb();
     let dbOperation;
     if (this._id) {
       dbOperation = db
@@ -23,7 +23,7 @@ class Product {
     }
     return dbOperation
       .then((result) => {
-        console.log(result);
+        console.log("Product Updated");
       })
       .catch((err) => {
         console.log(err);
@@ -37,7 +37,6 @@ class Product {
       .find()
       .toArray()
       .then((products) => {
-        console.log(products);
         return products;
       })
       .catch((err) => {
@@ -52,7 +51,6 @@ class Product {
       .find({ _id: new mongodb.ObjectId(productId) })
       .next()
       .then((product) => {
-        console.log(product);
         return product;
       })
       .catch((err) => {
@@ -66,7 +64,7 @@ class Product {
       .collection("products")
       .deleteOne({ _id: new mongodb.ObjectId(productId) })
       .then((result) => {
-        console.log(result);
+        console.log("Product Deleted");
       })
       .catch((err) => {
         console.log(err);
