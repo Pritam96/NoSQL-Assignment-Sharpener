@@ -12,7 +12,7 @@ class Product {
   }
 
   save() {
-    const db = getDb();
+    const db = getDb(); 
     let dbOperation;
     if (this._id) {
       dbOperation = db
