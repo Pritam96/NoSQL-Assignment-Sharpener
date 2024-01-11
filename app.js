@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 
 const errorController = require("./controllers/error");
 
-// const User = require("./models/user");
+const User = require("./models/user");
 
 dotenv.config({ path: "./config/config.env" });
 
@@ -22,14 +22,14 @@ const shopRoutes = require("./routes/shop");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// app.use((req, res, next) => {
-//   User.findById("659e2fc0c989c51317273eaa")
-//     .then((user) => {
-//       req.user = new User(user.name, user.email, user.cart, user._id);
-//       next();
-//     })
-//     .catch((err) => console.log(err));
-// });
+app.use((req, res, next) => {
+  User.findOne({ name: "Pritam" })
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log(err));
+});
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
@@ -41,8 +41,22 @@ const PORT = process.env.PORT || 3000;
 mongoose
   .connect(process.env.MONGO_URI)
   .then((result) => {
-    console.log("MongoDB Connected!");
-    app.listen(PORT, console.log("Server is running on port:", PORT));
+    // Creating a user if user 'Pritam' is not available
+    User.findOne({ name: "Pritam" })
+      .then((user) => {
+        if (!user) {
+          return User.create({
+            name: "Pritam",
+            email: "pritam@example.com",
+            cart: { items: [] },
+          });
+        }
+      })
+      .then((result) => {
+        console.log("MongoDB Connected!");
+        app.listen(PORT, console.log("Server is running on port:", PORT));
+      })
+      .catch((err) => console.log(err));
   })
   .catch((err) => {
     console.log(err);
